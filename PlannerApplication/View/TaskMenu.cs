@@ -21,7 +21,8 @@ namespace PlannerApplication.View
                 Console.WriteLine(@" --------Task menu----------
 
 1.Add task
-2.View all tasks");
+2.View all tasks
+3.Back");
 
                 string choice = Console.ReadLine();
                 switch (choice)
