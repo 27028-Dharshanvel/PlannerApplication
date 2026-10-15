@@ -6,7 +6,11 @@ namespace PlannerApplication.Repositories
     public class UserJson
     {
         private readonly string _filepath = "users.json";
-        private readonly JsonSerializerOptions _options = new() { WriteIndented = true };
+        private readonly JsonSerializerOptions _options = new()
+        {
+            PropertyNameCaseInsensitive = true,
+            WriteIndented = true
+        };
 
         public void SaveUsers(List<User> users)
         {
@@ -24,7 +28,12 @@ namespace PlannerApplication.Repositories
             }
 
             string content = File.ReadAllText(_filepath);
-            return JsonSerializer.Deserialize<List<User>>(content) ?? new List<User>();
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return new List<User>();
+            }
+
+            return JsonSerializer.Deserialize<List<User>>(content, _options) ?? new List<User>();
         }
     }
 }

@@ -7,7 +7,7 @@ namespace PlannerApplication.Repositories
         UserJson userjson = new UserJson();
         public UserRepository()
         {
-            users = new List<User>();
+            users = userjson.GetUsers();
         }
         public void AddUser(User user)
         {
@@ -17,7 +17,7 @@ namespace PlannerApplication.Repositories
 
         public List<User> GetUsers()
         {
-            return userjson.GetUsers();
+            return users;
         }
     }
 }

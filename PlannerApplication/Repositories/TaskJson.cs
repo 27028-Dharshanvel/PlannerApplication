@@ -29,7 +29,12 @@ namespace PlannerApplication.Repositories
             }
 
             string content = File.ReadAllText(_filepath);
-            return JsonSerializer.Deserialize<List<ToDoTask>>(content) ?? new List<ToDoTask>();
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return new List<ToDoTask>();
+            }
+
+            return JsonSerializer.Deserialize<List<ToDoTask>>(content, _jsonOptions) ?? new List<ToDoTask>();
         }
     }
 }
