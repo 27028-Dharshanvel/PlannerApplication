@@ -22,7 +22,7 @@ namespace PlannerApplication.View
             DrawBoundary();
             string[] menu = { "Login", "Signup" };
             int select = 0;
-            bool running = true;
+
             Console.CursorVisible = false;
             //            while (isAppRunning)
             //            {
