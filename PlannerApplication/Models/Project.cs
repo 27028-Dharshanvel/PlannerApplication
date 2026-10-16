@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PlannerApplication.Models
+﻿namespace PlannerApplication.Models
 {
-    internal class Project
+    public class Project
     {
+        public Project()
+        {
+        }
+
+        public Guid Id { get; set; } = Guid.NewGuid();
+
+        public Guid[]? UserIds { get; set; }
+
     }
 }
