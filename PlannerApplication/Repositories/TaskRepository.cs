@@ -13,10 +13,7 @@ namespace PlannerApplication.Repositories
 
         public void AddTask(ToDoTask task)
         {
-            if (task.Id == 0)
-            {
-                task.Id = tasks.Count > 0 ? tasks.Max(t => t.Id) + 1 : 1;
-            }
+            if (task.Id == Guid.Empty) task.Id = Guid.NewGuid();
             tasks.Add(task);
             taskjson.SaveTasks(tasks);
         }
@@ -24,6 +21,30 @@ namespace PlannerApplication.Repositories
         public List<ToDoTask> GetTasks()
         {
             return tasks;
+        }
+
+        public bool UpdateTask(ToDoTask task)
+        {
+            ToDoTask? existingTask = tasks.FirstOrDefault(t => t.Id == task.Id);
+            if (existingTask == null) return false;
+
+            existingTask.Name = task.Name;
+            existingTask.Description = task.Description;
+            existingTask.TargetStartDate = task.TargetStartDate;
+            existingTask.TargetEndDate = task.TargetEndDate;
+            existingTask.Status = task.Status;
+            taskjson.SaveTasks(tasks);
+            return true;
+        }
+
+        public bool DeleteTask(Guid id)
+        {
+            ToDoTask? task = tasks.FirstOrDefault(t => t.Id == id);
+            if (task == null) return false;
+
+            tasks.Remove(task);
+            taskjson.SaveTasks(tasks);
+            return true;
         }
     }
 }

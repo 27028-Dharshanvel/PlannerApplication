@@ -1,6 +1,6 @@
 ﻿using PlannerApplication.Services;
-using Spectre.Console;
-using System;
+
+using System.Reflection.Metadata.Ecma335;
 
 namespace PlannerApplication.View
 {
@@ -19,7 +19,7 @@ namespace PlannerApplication.View
         {
             Console.Title = "Planner Application";
             bool isAppRunning = true;
-            DrawBoundary();
+            //DrawBoundary();
             string[] menu = { "Login", "Signup" };
             int select = 0;
 
@@ -35,8 +35,8 @@ namespace PlannerApplication.View
             //                       .Centered()
             //                       .Color(Color.Red)
             //                );
-            DrawUsernameBox();
-            DrawPasswordBox();
+            //DrawUsernameBox();
+            //DrawPasswordBox();
             //                //Console.WriteLine($"width : {Console.WindowWidth} height : { Console.WindowHeight}");
             ////                Console.WriteLine(@"----------Planner Application----------
 
@@ -70,6 +70,11 @@ namespace PlannerApplication.View
             //            }
             while (isAppRunning)
             {
+                DrawBoundary();
+                DrawUsernameBox();
+                DrawPasswordBox();
+                Console.SetCursorPosition(Console.WindowWidth / 2 - 9, Console.WindowHeight / 2 + 8);
+                Console.Write("                                  ");
                 Console.SetCursorPosition(Console.WindowWidth / 2 - 5, Console.WindowHeight / 2 - 5);
                 Console.Write("                             ");
                 Console.SetCursorPosition(Console.WindowWidth / 2 - 5, Console.WindowHeight / 2 - 5);
@@ -110,7 +115,7 @@ namespace PlannerApplication.View
                     {
                         RegisterUser();
                         if (!Console.IsInputRedirected) Console.ReadKey();
-                        break;
+                        continue;
                     }
                 }
             }
@@ -128,11 +133,14 @@ namespace PlannerApplication.View
             Result result = authService.AddUser(username ?? string.Empty, password ?? string.Empty);
             if (result.IsSuccess)
             {
-                Console.WriteLine("Register successful");
+                Console.SetCursorPosition(Console.WindowWidth / 2 - 9, Console.WindowHeight / 2 + 8);
+                Console.Write("Register successful");
+                return;
             }
             else
             {
-                Console.WriteLine(result.ErrorMessage);
+                Console.SetCursorPosition(Console.WindowWidth / 2 - 9, Console.WindowHeight / 2 + 8);
+                Console.Write(result.ErrorMessage);
             }
         }
 
@@ -145,13 +153,15 @@ namespace PlannerApplication.View
             GuidResult result = authService.LoginUser(username ?? string.Empty, password ?? string.Empty);
             if (result.IsSuccess)
             {
-                Console.WriteLine("Login successful");
+                //Console.WriteLine("Login successful");
+                Console.Clear();
                 taskMenu.DisplayTaskMenu(result.Id);
                 return true;
             }
             else
             {
-                Console.WriteLine(result.ErrorMessage);
+                Console.SetCursorPosition(Console.WindowWidth / 2 - 9, Console.WindowHeight / 2 + 8);
+                Console.Write(result.ErrorMessage);
                 return false;
             }
         }
@@ -161,18 +171,18 @@ namespace PlannerApplication.View
         {
             Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 - 2);
             Console.Write("Username : ");
-            Console.SetCursorPosition(Console.WindowWidth/2 - 10, Console.WindowHeight/2 - 3);
+            Console.SetCursorPosition(Console.WindowWidth / 2 - 10, Console.WindowHeight / 2 - 3);
             DrawFieldBox(30);
-            Console.SetCursorPosition(0,0);
+            Console.SetCursorPosition(0, 0);
         }
-        
+
         public void DrawPasswordBox()
         {
             Console.SetCursorPosition(Console.WindowWidth / 2 - 20, Console.WindowHeight / 2 + 2);
             Console.Write("Password : ");
             Console.SetCursorPosition(Console.WindowWidth / 2 - 10, Console.WindowHeight / 2 + 1);
             DrawFieldBox(30);
-            Console.SetCursorPosition(0,0);
+            Console.SetCursorPosition(0, 0);
         }
 
         public void DrawFieldBox(int length)
@@ -192,14 +202,14 @@ namespace PlannerApplication.View
             string horline = new string('\u2500', Console.WindowWidth - 3);
             Console.SetCursorPosition(1, 1);
             Console.Write($"\u250C{horline}\u2510");
-            for(int i=2;i< Console.WindowHeight-1; i++)
+            for (int i = 2; i < Console.WindowHeight - 1; i++)
             {
                 Console.SetCursorPosition(1, i);
                 Console.Write("\u2502");
                 Console.SetCursorPosition(Console.WindowWidth - 1, i);
                 Console.Write("\u2502");
             }
-            Console.SetCursorPosition(1, Console.WindowHeight-1);
+            Console.SetCursorPosition(1, Console.WindowHeight - 1);
             Console.Write($"\u2514{horline}\u2518");
         }
     }

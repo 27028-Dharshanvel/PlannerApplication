@@ -1,5 +1,6 @@
 ﻿using PlannerApplication.Models;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace PlannerApplication.Repositories
 {
@@ -10,7 +11,7 @@ namespace PlannerApplication.Repositories
         {
             PropertyNameCaseInsensitive = true,
             WriteIndented = true,
-            Converters = { new DateOnlyJsonConverter() },
+            Converters = { new DateOnlyJsonConverter(), new LegacyTaskIdJsonConverter() },
         };
 
         public void SaveTasks(List<ToDoTask> tasks)
@@ -35,6 +36,27 @@ namespace PlannerApplication.Repositories
             }
 
             return JsonSerializer.Deserialize<List<ToDoTask>>(content, _jsonOptions) ?? new List<ToDoTask>();
+        }
+    }
+
+    internal class LegacyTaskIdJsonConverter : JsonConverter<Guid>
+    {
+        public override Guid Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType == JsonTokenType.String && Guid.TryParse(reader.GetString(), out Guid id))
+                return id;
+            if (reader.TokenType == JsonTokenType.Number && reader.TryGetInt32(out int legacyId))
+            {
+                byte[] bytes = new byte[16];
+                BitConverter.GetBytes(legacyId).CopyTo(bytes, 0);
+                return new Guid(bytes);
+            }
+            return Guid.Empty;
+        }
+
+        public override void Write(Utf8JsonWriter writer, Guid value, JsonSerializerOptions options)
+        {
+            writer.WriteStringValue(value);
         }
     }
 }
